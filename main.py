@@ -12,18 +12,20 @@ def main():
     timestamp = None
 
     while True:
-        payload = {"timestamp": timestamp}
-        response = requests.get(
-            url, headers=headers, params=payload, timeout=120
-        )
-        response.raise_for_status()
-        server_answer = response.json()
-        print(server_answer)
-
-        if server_answer.get("timestamp_to_request"):
-            timestamp = server_answer.get("timestamp_to_request")
-        else:
-            timestamp = server_answer.get("last_attempt_timestamp")
+        try:
+            payload = {"timestamp": timestamp}
+            response = requests.get(
+                url, headers=headers, params=payload, timeout=120
+            )
+            response.raise_for_status()
+            server_answer = response.json()
+            print(server_answer)
+            if server_answer.get("timestamp_to_request"):
+                timestamp = server_answer.get("timestamp_to_request")
+            else:
+                timestamp = server_answer.get("last_attempt_timestamp")
+        except requests.exceptions.ReadTimeout:
+            continue
 
 
 if __name__ == "__main__":
