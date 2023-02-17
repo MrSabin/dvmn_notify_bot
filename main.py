@@ -1,3 +1,5 @@
+import time
+
 import requests
 from environs import Env
 
@@ -26,6 +28,8 @@ def main():
                 timestamp = server_answer.get("last_attempt_timestamp")
         except requests.exceptions.ReadTimeout:
             continue
+        except requests.exceptions.ConnectionError:
+            time.sleep(10)
 
 
 if __name__ == "__main__":
