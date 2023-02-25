@@ -38,14 +38,14 @@ def main():
                 url, headers=headers, params=payload, timeout=120
             )
             response.raise_for_status()
-            server_answer = response.json()
-            if server_answer.get("status") == "found":
-                for attempt in server_answer.get("new_attempts"):
+            review_status = response.json()
+            if review_status.get("status") == "found":
+                for attempt in review_status.get("new_attempts"):
                     send_message(attempt, bot_token, chat_id)
-            if server_answer.get("timestamp_to_request"):
-                timestamp = server_answer.get("timestamp_to_request")
+            if review_status.get("timestamp_to_request"):
+                timestamp = review_status.get("timestamp_to_request")
             else:
-                timestamp = server_answer.get("last_attempt_timestamp")
+                timestamp = review_status.get("last_attempt_timestamp")
         except requests.exceptions.ReadTimeout:
             print("Request timeout, sending again...")
             continue
