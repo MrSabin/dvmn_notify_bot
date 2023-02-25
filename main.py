@@ -35,7 +35,7 @@ def main():
         try:
             payload = {"timestamp": timestamp}
             response = requests.get(
-                url, headers=headers, params=payload, timeout=120
+                url, headers=headers, params=payload, timeout=90
             )
             response.raise_for_status()
             review_status = response.json()
@@ -47,11 +47,10 @@ def main():
             else:
                 timestamp = review_status.get("last_attempt_timestamp")
         except requests.exceptions.ReadTimeout:
-            print("Request timeout, sending again...")
             continue
         except requests.exceptions.ConnectionError:
             print("Connection lost, retry in 10 seconds...")
-            time.sleep(10)
+            time.sleep(3)
 
 
 if __name__ == "__main__":
