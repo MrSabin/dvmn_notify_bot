@@ -39,7 +39,6 @@ def main():
             )
             response.raise_for_status()
             server_answer = response.json()
-            print(server_answer)
             if server_answer.get("status") == "found":
                 for attempt in server_answer.get("new_attempts"):
                     send_message(attempt, bot_token, chat_id)
