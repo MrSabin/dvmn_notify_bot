@@ -19,15 +19,6 @@ class BotLogsHandler(logging.Handler):
         self.bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
-def send_log_message(text):
-    env = Env()
-    env.read_env()
-    bot_token = env.str("TG_BOT_TOKEN")
-    chat_id = env.str("TG_CHAT_ID")
-    bot = telegram.Bot(token=bot_token)
-    bot.send_message(text=text, chat_id=chat_id)
-
-
 def send_message(attempt, bot, chat_id):
     lesson_title = attempt["lesson_title"]
     is_negative = attempt["is_negative"]
