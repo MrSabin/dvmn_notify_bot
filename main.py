@@ -5,11 +5,18 @@ import requests
 import telegram
 from environs import Env
 
+logger = logging.getLogger("BotLogger")
+
 
 class BotLogsHandler(logging.Handler):
+    def __init__(self, bot, chat_id):
+        super().__init__()
+        self.chat_id = chat_id
+        self.bot = bot
+
     def emit(self, record):
         log_entry = self.format(record)
-        send_log_message(log_entry)
+        self.bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
 def send_log_message(text):
@@ -21,9 +28,7 @@ def send_log_message(text):
     bot.send_message(text=text, chat_id=chat_id)
 
 
-def send_message(attempt, bot_token, chat_id):
-    bot = telegram.Bot(token=bot_token)
-
+def send_message(attempt, bot, chat_id):
     lesson_title = attempt["lesson_title"]
     is_negative = attempt["is_negative"]
     lesson_url = attempt["lesson_url"]
@@ -37,19 +42,20 @@ def send_message(attempt, bot_token, chat_id):
 
 
 def main():
-    logger = logging.getLogger("BotLogger")
-    logger.setLevel(logging.INFO)
-    handler = BotLogsHandler()
-    formatter = logging.Formatter("%(process)d %(levelname)s %(message)s")
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.info("Bot started")
-
     env = Env()
     env.read_env()
     dvmn_token = env.str("DVMN_TOKEN")
     bot_token = env.str("TG_BOT_TOKEN")
     chat_id = env.str("TG_CHAT_ID")
+
+    bot = telegram.Bot(token=bot_token)
+
+    logger.setLevel(logging.INFO)
+    handler = BotLogsHandler(bot, chat_id)
+    formatter = logging.Formatter("%(process)d %(levelname)s %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.info("Bot started")
 
     url = "https://dvmn.org/api/long_polling/"
     headers = {"Authorization": dvmn_token}
@@ -65,7 +71,7 @@ def main():
             review_status = response.json()
             if review_status.get("status") == "found":
                 for attempt in review_status.get("new_attempts"):
-                    send_message(attempt, bot_token, chat_id)
+                    send_message(attempt, bot, chat_id)
             if review_status.get("timestamp_to_request"):
                 timestamp = review_status.get("timestamp_to_request")
             else:
