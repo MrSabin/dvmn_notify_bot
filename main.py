@@ -1,3 +1,4 @@
+import logging
 import time
 
 import requests
@@ -21,6 +22,8 @@ def send_message(attempt, bot_token, chat_id):
 
 
 def main():
+    logging.basicConfig(level=logging.DEBUG)
+    logging.info("Bot started")
     env = Env()
     env.read_env()
     dvmn_token = env.str("DVMN_TOKEN")
@@ -34,6 +37,7 @@ def main():
     while True:
         try:
             payload = {"timestamp": timestamp}
+            logging.debug("Connecting to API")
             response = requests.get(
                 url, headers=headers, params=payload, timeout=90
             )
