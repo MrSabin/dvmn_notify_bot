@@ -37,10 +37,14 @@ def send_message(attempt, bot_token, chat_id):
 
 
 def main():
-    logger = logging.getLogger("BotLogsHandler")
+    logger = logging.getLogger("BotLogger")
     logger.setLevel(logging.INFO)
-    logger.addHandler(BotLogsHandler())
-    logging.info("Bot started")
+    handler = BotLogsHandler()
+    formatter = logging.Formatter("%(process)d %(levelname)s %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.info("Bot started")
+
     env = Env()
     env.read_env()
     dvmn_token = env.str("DVMN_TOKEN")
