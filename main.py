@@ -37,7 +37,6 @@ def main():
     while True:
         try:
             payload = {"timestamp": timestamp}
-            logging.debug("Connecting to API")
             response = requests.get(
                 url, headers=headers, params=payload, timeout=90
             )
