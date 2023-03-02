@@ -77,7 +77,6 @@ def main():
             else:
                 timestamp = review_status.get("last_attempt_timestamp")
         except requests.exceptions.ReadTimeout:
-            logger.info("Connection timeout")
             continue
         except requests.exceptions.ConnectionError:
             logger.warning("Connection lost, retry")
