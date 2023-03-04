@@ -49,10 +49,10 @@ docker build -t dvmn-notify-bot .
 ```
 After that, run container by typing
 ```python
-docker run --env-file "path to your .env file" "image name"
+docker run -d --restart always --env-file "path to your .env file" "image name"
 ```
 Example:
 ```python
-docker run --env-file /opt/dvmn_notify_bot/.env dvmn-notify-bot
+docker run -d --restart always --env-file /opt/dvmn_notify_bot/.env dvmn-notify-bot
 ```
 Container will be up and running, bot fully operational.
