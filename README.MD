@@ -20,9 +20,9 @@ For use this scripts, you will need:
 
 Create .env file in script directory, then put in your tokens and parameters, like:
 ```python
-DVMN_TOKEN="your_devman_token"
-TG_BOT_TOKEN="your_bot_token"
-TG_CHAT_ID="your_chat_id"
+DVMN_TOKEN=your_devman_token
+TG_BOT_TOKEN=your_bot_token
+TG_CHAT_ID=your_chat_id
 ```
 
 ## Using script
@@ -36,3 +36,23 @@ python3 main.py
 ```
 
 Script will be up and running. Bot alerts you on work status changes.
+
+## Using as Docker container
+
+Build image by command
+```python
+docker build -t "image_name" .
+```
+Example:
+```python
+docker build -t dvmn-notify-bot .
+```
+After that, run container by typing
+```python
+docker run --env-file "path to your .env file" "image name"
+```
+Example:
+```python
+docker run --env-file /opt/dvmn_notify_bot/.env dvmn-notify-bot
+```
+Container will be up and running, bot fully operational.
